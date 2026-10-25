@@ -1,17 +1,24 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+def _env(name: str, default: str = ""):
+    return field(default_factory=lambda: os.getenv(name, default))
 
 @dataclass(frozen=True)
 class Configuracion:
     # Enchufe
-    ip: str = ""
-    usuario: str = ""
-    key: str = ""
+    ip: str = _env("KASA_IP")
+    usuario: str = _env("KASA_USUARIO")
+    clave: str = _env("KASA_CLAVE")
+
 
     # Alexa (Voice Monkey) — dejar vacío para desactivar
-    alexa_token: str = ""
-    alexa_dispositivo: str = ""
- 
+    alexa_token: str = _env("ALEXA_TOKEN")
+    alexa_dispositivo: str = _env("ALEXA_DISPOSITIVO")
+
     # Detección
     umbral_terminado_w: float = 2.0   # <= este valor = lavadora detenida
     umbral_encendido_w: float = 5.0   # >  este valor = empezó un ciclo
